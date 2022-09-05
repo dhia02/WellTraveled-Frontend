@@ -1,0 +1,144 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body"></div>
+  </div>
+</div>
+
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Inviter un employé :</h3>
+        </div>
+        <div class="mt-2">
+          <form
+            role="form"
+            [formGroup]="employeForm"
+            (ngSubmit)="envoyerEmployer()"
+          >
+            <div class="pl-lg-4">
+              <div class="row align-items-center" *ngIf="loadingUpdate == true">
+                <div class="col-8">
+                  <p>Envoie en cours...</p>
+                </div>
+                <div class="col-4 text-right">
+                  <mat-spinner diameter="40" class="ml-3"></mat-spinner>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="nom.invalid && nom.touched"
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-circle-08"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Nom"
+                        type="text"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="nom"
+                      />
+                    </div>
+                    <div *ngIf="nom.invalid && nom.touched">
+                      <small *ngIf="nom.errors?.required" class="text-danger"
+                        ><b>Le champ nom est requis</b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="prenom.invalid && prenom.touched"
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-circle-08"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Prénom"
+                        type="text"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="prenom"
+                      />
+                    </div>
+                    <div *ngIf="prenom.invalid && prenom.touched">
+                      <small *ngIf="prenom.errors?.required" class="text-danger"
+                        ><b>Le champ prénom est requis</b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="email.invalid && email.touched"
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-email-83"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Email"
+                        type="email"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="email"
+                      />
+                    </div>
+                    <div *ngIf="email.invalid && email.touched">
+                      <small *ngIf="email.errors?.required" class="text-danger"
+                        ><b>Le champ email est requis</b></small
+                      >
+                      <small *ngIf="email.errors?.pattern" class="text-danger"
+                        ><b>Email non valide</b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="my-4" />
+
+            <div class="text-center">
+              <button
+                type="submit"
+                class="btn btn-success mt-4 mb-5"
+                [disabled]="employeForm.invalid"
+              >
+                Envoyer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

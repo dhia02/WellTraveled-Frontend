@@ -1,0 +1,119 @@
+<div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Se connecter</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator separator-bottom separator-skew zindex-100">
+    <svg
+      x="0"
+      y="0"
+      viewBox="0 0 2560 100"
+      preserveAspectRatio="none"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <app-login-form [isSessionExpired]="false"></app-login-form>
+      <div class="row mt-3">
+        <div class="col-6">
+          <a
+            href="javascript:void(0)"
+            class="text-light"
+            (click)="open(classic1, 'modal_mini', 'sm')"
+          >
+            <small>mot de passe oublié ?</small>
+          </a>
+
+          <ng-template #classic1 let-c="close" let-d="dismiss">
+            <div class="modal-content">
+              <div class="modal-body p-0">
+                <div class="card bg-secondary shadow border-0">
+                  <div
+                    class="card-header bg-transparent pb-5 row align-items-center"
+                    *ngIf="loadingSend == true"
+                  >
+                    <div class="col-8">
+                      <p>Envoi en cours...</p>
+                    </div>
+                    <div class="col-4 text-right">
+                      <mat-spinner diameter="40"></mat-spinner>
+                    </div>
+                  </div>
+                  <div class="card-body px-lg-5 py-lg-5">
+                    <form
+                      role="form"
+                      [formGroup]="resetForm"
+                      (ngSubmit)="envoyer()"
+                    >
+                      <div class="form-group mb-3">
+                        <div
+                          class="input-group input-group-alternative"
+                          [class.has-danger]="
+                            emailReset.invalid && emailReset.touched
+                          "
+                        >
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"
+                              ><i class="ni ni-email-83"></i
+                            ></span>
+                          </div>
+                          <input
+                            class="form-control"
+                            placeholder="Email de récupération"
+                            type="email"
+                            formControlName="emailReset"
+                          />
+                        </div>
+                        <div *ngIf="emailReset.invalid && emailReset.touched">
+                          <small
+                            *ngIf="emailReset.errors?.required"
+                            class="text-danger"
+                            ><b
+                              >Le champ email de récupération est requis</b
+                            ></small
+                          >
+                          <small
+                            *ngIf="emailReset.errors?.pattern"
+                            class="text-danger"
+                            ><b>Email de récupération non valide</b></small
+                          >
+                        </div>
+                      </div>
+
+                      <div class="text-center">
+                        <button
+                          type="submit"
+                          class="btn btn-primary my-4"
+                          [disabled]="resetForm.invalid"
+                        >
+                          Envoyer
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+        <div class="col-6 text-right">
+          <a routerLink="/register" class="text-light">
+            <small>Créer un compte</small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

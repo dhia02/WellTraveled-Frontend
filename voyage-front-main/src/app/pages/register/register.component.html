@@ -1,0 +1,430 @@
+<div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 *ngIf="employeeSignUp === false" class="text-white">
+            Inscription Pour une entreprise
+          </h1>
+          <h1 *ngIf="employeeSignUp === true" class="text-white">
+            Inscription Pour un employé
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="separator separator-bottom separator-skew zindex-100">
+    <svg
+      x="0"
+      y="0"
+      viewBox="0 0 2560 100"
+      preserveAspectRatio="none"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+  <!-- Table -->
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card bg-secondary shadow border-0">
+        <div
+          class="card-header bg-transparent pb-5 d-flex align-items-center"
+          *ngIf="loading == true"
+        >
+          <p class="mx-2">Verification en cours...</p>
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form role="form" [formGroup]="signUpForm" (ngSubmit)="register()">
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="nom.invalid && nom.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-circle-08"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  [placeholder]="
+                    employeeSignUp === false
+                      ? 'Nom de lentreprise*'
+                      : 'Nom de lemployé*'
+                  "
+                  type="text"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  formControlName="nom"
+                  (keyup)="toTitleCase(nom)"
+                />
+              </div>
+              <div *ngIf="nom.invalid && nom.touched">
+                <small *ngIf="nom.errors?.required" class="text-danger"
+                  ><b>Le champ nom de l'entreprise est requis</b></small
+                >
+              </div>
+            </div>
+            <div
+              *ngIf="employeeSignUp === true"
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="prenom.invalid && prenom.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-circle-08"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Prénom de lemployé*"
+                  type="text"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  formControlName="prenom"
+                  (keyup)="toTitleCase(prenom)"
+                />
+              </div>
+              <div *ngIf="prenom.invalid && prenom.touched">
+                <small *ngIf="prenom.errors?.required" class="text-danger"
+                  ><b>Le champ prénom de l'employé est requis</b></small
+                >
+              </div>
+            </div>
+
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="mobile.invalid && mobile.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-mobile-button"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  [placeholder]="
+                    employeeSignUp === false
+                      ? 'Téléphone de lentreprise*'
+                      : 'Téléphone de lemployé*'
+                  "
+                  type="text"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  formControlName="mobile"
+                />
+              </div>
+              <div *ngIf="mobile.invalid && mobile.touched">
+                <small *ngIf="mobile.errors?.required" class="text-danger"
+                  ><b>Le champ téléphone est requis</b></small
+                >
+                <small *ngIf="mobile.errors?.pattern" class="text-danger"
+                  ><b
+                    >Téléphone doit être composé seulement des chiffres
+                  </b></small
+                >
+              </div>
+            </div>
+
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <!-- <mat-form-field appearance="fill">
+                <mat-label>Date de naissance</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="picker"
+                  name="dp"
+                  formControlName="dateNaissance"
+                  [max]="maxDate"
+                  (dateInput)="addEvent($event)"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field> -->
+              <!-- <igx-date-picker
+                formControlName="dateNaissance"
+                [maxValue]="maxDate"
+                locale="fr"
+                mode="dropdown"
+              >
+                <label igxLabel>Date de naissance *</label>
+              </igx-date-picker> -->
+
+              <!-- <p>{{ dateNaissance.value | json }}</p> -->
+              <mat-form-field>
+                <mat-label *ngIf="employeeSignUp === false"
+                  >Date de création *</mat-label
+                >
+                <mat-label *ngIf="employeeSignUp === true"
+                  >Date de naissance *</mat-label
+                >
+                <input
+                  matInput
+                  placeholder="DD/MM/YYYY"
+                  [matDatepicker]="dp"
+                  disabled
+                  formControlName="dateNaissance"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dp disabled="false"></mat-datepicker>
+              </mat-form-field>
+              <div *ngIf="dateNaissance.invalid && dateNaissance.touched">
+                <small
+                  *ngIf="
+                    dateNaissance.value == null ||
+                    dateNaissance.value.length == 0
+                  "
+                  class="text-danger"
+                  ><b *ngIf="employeeSignUp === false"
+                    >Le champ date de création est requis</b
+                  >
+                  <b *ngIf="employeeSignUp === true"
+                    >Le champ date de naissance est requis</b
+                  ></small
+                >
+              </div>
+            </div>
+
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="email.invalid && email.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-email-83"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Email *"
+                  type="email"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  formControlName="email"
+                />
+              </div>
+              <div *ngIf="email.invalid && email.touched">
+                <small *ngIf="email.errors?.required" class="text-danger"
+                  ><b>Le champ email est requis</b></small
+                >
+                <small *ngIf="email.errors?.pattern" class="text-danger"
+                  ><b>Email non valide</b></small
+                >
+              </div>
+            </div>
+
+            <div class="form-group" [ngClass]="{ focused: focus1 === true }">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-lock-circle-open"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="Password *"
+                  [type]="visible ? 'text' : 'password'"
+                  (focus)="focus1 = true"
+                  (blur)="focus1 = false"
+                  formControlName="password"
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <a href="" (click)="toggle($event)">
+                      <i
+                        class="fa fa-eye-slash"
+                        *ngIf="!visible"
+                        [ngStyle]="
+                          password.invalid &&
+                          password.touched && { color: 'red' }
+                        "
+                      ></i>
+                      <i
+                        class="fa fa-eye"
+                        *ngIf="visible"
+                        [ngStyle]="
+                          password.invalid &&
+                          password.touched && { color: 'red' }
+                        "
+                      ></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="password.invalid && password.touched">
+                <small *ngIf="password.errors?.required" class="text-danger"
+                  ><b>le champ mot de passe est requis</b></small
+                >
+                <small *ngIf="password.errors?.pattern" class="text-danger"
+                  ><b
+                    >Un mot de passe doit contenir au minimum 8 caractères, à
+                    savoir : au moins une lettre minuscule et une lettre
+                    majuscule, un caractère spécial et un chiffre.</b
+                  ></small
+                >
+              </div>
+            </div>
+            <div class="form-group" [ngClass]="{ focused: focus1 === true }">
+              <div class="input-group input-group-alternative">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-lock-circle-open"></i
+                  ></span>
+                </div>
+                <input
+                  class="form-control"
+                  placeholder="confirmer password *"
+                  [type]="visibleConfirm ? 'text' : 'password'"
+                  (focus)="focus1 = true"
+                  (blur)="focus1 = false"
+                  formControlName="validatePassword"
+                  autocomplete="off"
+                />
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <a href="" (click)="toggleConfirm($event)">
+                      <i
+                        class="fa fa-eye-slash"
+                        *ngIf="!visibleConfirm"
+                        [ngStyle]="
+                          (signUpForm.errors?.misMatch ||
+                            (validatePassword.invalid &&
+                              validatePassword.touched)) && { color: 'red' }
+                        "
+                      ></i>
+                      <i
+                        class="fa fa-eye"
+                        *ngIf="visibleConfirm"
+                        [ngStyle]="
+                          (signUpForm.errors?.misMatch ||
+                            (validatePassword.invalid &&
+                              validatePassword.touched)) && { color: 'red' }
+                        "
+                      ></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  (validatePassword.invalid && validatePassword.touched) ||
+                  signUpForm.errors?.misMatch
+                "
+              >
+                <small
+                  *ngIf="validatePassword.errors?.required; else mismatch"
+                  class="text-danger"
+                  ><b>le champ confirmer mot de passe est requis</b></small
+                >
+                <ng-template #mismatch>
+                  <small *ngIf="signUpForm.errors?.misMatch" class="text-danger"
+                    ><b>Mot de passe non confirmé</b></small
+                  >
+                </ng-template>
+              </div>
+            </div>
+
+            <div class="input-group input-group-alternative">
+              <input
+                class="form-control-file"
+                style="display: none"
+                type="file"
+                (focus)="focus1 = true"
+                (blur)="focus1 = false"
+                (change)="onFileChanged($event)"
+                #fileInput
+              />
+
+              <button
+                class="btn btn-icon btn-3 btn-primary"
+                type="button"
+                (click)="fileInput.click()"
+              >
+                <span class="btn-inner--icon"
+                  ><i class="ni ni-bag-17"></i
+                ></span>
+                <span class="btn-inner--text" *ngIf="employeeSignUp === false"
+                  >Logo de l'entreprise</span
+                >
+                <span class="btn-inner--text" *ngIf="employeeSignUp === true"
+                  >Photo de profile</span
+                >
+              </button>
+            </div>
+            <p *ngIf="fileName" class="text-primary">
+              <b>{{ fileName }}</b>
+            </p>
+
+            <div class="row my-4">
+              <div class="col-12">
+                <mat-checkbox
+                  [color]="'primary'"
+                  (ngModelChange)="checkedToggle()"
+                  formControlName="check"
+                >
+                </mat-checkbox>
+
+                <label class="ml-2">
+                  <span
+                    >Je suis d'accord avec
+                    <a href="javascript:void(0)"
+                      >la politique de confidentialité *</a
+                    >
+                  </span>
+                </label>
+              </div>
+              <div class="col-12">
+                <small *ngIf="mustCheck" class="text-danger"
+                  ><b
+                    >Il faut accepter la politique de confidentialité</b
+                  ></small
+                >
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button
+                type="submit"
+                class="btn btn-primary mt-4"
+                [disabled]="
+                  signUpForm.invalid || mustCheck == null || mustCheck == true
+                "
+              >
+                Créer un compte
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

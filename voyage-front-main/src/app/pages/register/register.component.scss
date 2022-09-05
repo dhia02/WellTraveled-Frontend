@@ -1,0 +1,27 @@
+// @use "igniteui-angular/theming";
+
+// // IMPORTANT: Prior to Ignite UI for Angular version 13 use:
+// // @import '~igniteui-angular/lib/core/styles/themes/index';
+
+// $custom-datepicker-theme: igx-calendar-theme(
+//   $header-background: #345779,
+//   $content-background: #fdfdfd,
+//   $header-text-color: #ffffff,
+//   $date-current-text-color: #2dabe8,
+//   $picker-arrow-color: #2dabe8,
+//   $date-selected-text-color: #fdfdfd,
+//   $date-current-bg-color: #fdfdfd,
+//   $picker-arrow-hover-color: #345779,
+//   $year-current-text-color: #2dabe8,
+//   $year-hover-text-color: #2dabe8,
+//   $month-current-text-color: #2dabe8,
+//   $month-hover-text-color: #2dabe8,
+//   $picker-text-color: #2dabe8,
+//   $picker-text-hover-color: #345779,
+// );
+// @include igx-css-vars($custom-datepicker-theme);
+// :host {
+//   ::ng-deep {
+//     @include igx-calendar($custom-datepicker-theme);
+//   }
+// }

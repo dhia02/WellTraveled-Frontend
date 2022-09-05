@@ -1,0 +1,60 @@
+@use "igniteui-angular/theming" as *;
+/* You can add global styles to this file, and also import other style files */
+@import "~ngx-toastr/toastr";
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: #fb6340;
+}
+body:before {
+  content: "";
+  height: 100%;
+  float: left;
+  width: 0;
+  margin-top: -32767px;
+}
+.cdk-overlay-container {
+  z-index: 1127;
+}
+
+@import "~igniteui-angular/theming";
+
+// Uncomment the following lines if you want to add a custom palette:
+// $primary: #731963 !default;
+// $secondary: #ce5712 !default;
+// $app-palette: palette($primary, $secondary);
+
+/* autoprefixer grid: on */
+
+@include core();
+// @include typography(
+//   $font-family: $material-typeface,
+//   $type-scale: $material-type-scale
+// );
+@include theme($default-palette);
+
+$custom-radio-theme: radio-theme(
+  $disabled-color: lightgray,
+  $empty-color: #345779,
+  $fill-color: #fb6340,
+  $fill-color-hover: #fb6340,
+  $fill-hover-border-color: #fb6340,
+);
+@include css-vars($custom-radio-theme);
+:host {
+  ::ng-deep {
+    @include radio($custom-radio-theme);
+  }
+}

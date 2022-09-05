@@ -1,0 +1,390 @@
+<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <!-- Card stats -->
+      <div class="row">
+        <div class="col-xl-3 col-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Voyages
+                  </h5>
+                  <span
+                    class="h2 font-weight-bold mb-0"
+                    *ngIf="dataSourceVoyage"
+                    >{{ dataSourceVoyage.data.length }}</span
+                  >
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape bg-yellow text-white rounded-circle shadow"
+                  >
+                    <i class="ni ni-chart-bar-32"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Liste des voyages</h3>
+          <mat-form-field appearance="standard">
+            <mat-label>Chercher</mat-label>
+            <input
+              matInput
+              (keyup)="applyFilterVoyages($event)"
+              placeholder="Ex. objet"
+              #input
+            />
+          </mat-form-field>
+          <a
+            href="#"
+            (click)="initVoyage(); open(classic2, 'xl', $event)"
+            class="ml-2"
+          >
+            <i class="fa fa-plus-square fa-2x ml-2" style="color: #2dce89"></i>
+          </a>
+        </div>
+        <div class="table-responsive">
+          <div class="mat-elevation-z8">
+            <table
+              mat-table
+              [dataSource]="dataSourceVoyage"
+              matSort
+              #CSort="matSort"
+            >
+              <!-- destination Column -->
+              <ng-container matColumnDef="destination">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="hide-arrow lib-width"
+                >
+                  Destination
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.destination | titlecase }}
+                </td>
+              </ng-container>
+
+              <!-- dateCreation Column -->
+              <ng-container matColumnDef="dateDebut">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="hide-arrow"
+                >
+                  date début
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.dateDebut | date }}
+                </td>
+              </ng-container>
+
+              <!-- dateFin Column -->
+              <ng-container matColumnDef="dateFin">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="hide-arrow"
+                >
+                  date fin
+                </th>
+                <td mat-cell *matCellDef="let row">{{ row.dateFin | date }}</td>
+              </ng-container>
+              <!-- nbrFactureAutorise Column -->
+              <ng-container matColumnDef="objet">
+                <th
+                  mat-header-cell
+                  *matHeaderCellDef
+                  mat-sort-header
+                  class="hide-arrow"
+                >
+                  Objet
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  {{ row.objet }}
+                </td>
+              </ng-container>
+
+              <!-- Action Column -->
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="hide-arrow">
+                  Action
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <a href="" (click)="open(classic, 'md', $event)">
+                    <i class="fa fa-trash" style="color: red"></i
+                  ></a>
+                  <a
+                    href="javascript:void(0)"
+                    (click)="loadVoyage(row); open(classic2, 'xl', $event)"
+                  >
+                    <i class="fa fa-edit ml-1" style="color: #fb6340"></i>
+                  </a>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsC"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumnsC"
+                (click)="chooseVoyage(row)"
+                [class.demo-row-is-clicked]="clickedRowsVoyage == row"
+              ></tr>
+
+              <!-- Row shown when there is no matching data. -->
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">
+                  Accune résultat pour "{{ input.value }}"
+                </td>
+              </tr>
+            </table>
+
+            <mat-paginator
+              #CPaginator="matPaginator"
+              [pageSizeOptions]="[5, 10, 25, 100]"
+              aria-label="Select page of Voyages"
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--ajout voyage-->
+<ng-template #classic2 let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-primary" id="modal-title-default">
+        Entrez les informations du voyage
+      </h4>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="d('Cross click')"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form
+        role="form"
+        [formGroup]="voyageForm"
+        (ngSubmit)="sauveguarderVoyage()"
+      >
+        <div class="row align-items-center" *ngIf="loadAjout == true">
+          <div class="col-8">
+            <p>Ajout en cours...</p>
+          </div>
+          <div class="col-4 text-right">
+            <mat-spinner diameter="40" class="ml-3"></mat-spinner>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-1">
+              <small class="text-uppercase font-weight-bold">destination</small>
+            </div>
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="destination.invalid && destination.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-bold-right"></i
+                  ></span>
+                </div>
+
+                <input
+                  class="form-control"
+                  placeholder="destination"
+                  type="text"
+                  (focus)="focus = true"
+                  (blur)="focus = false"
+                  formControlName="destination"
+                />
+              </div>
+              <div *ngIf="destination.invalid && destination.touched">
+                <small *ngIf="destination.errors?.required" class="text-danger"
+                  ><b>Le champ destination est requis</b></small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-1">
+              <small class="text-uppercase font-weight-bold">objet </small>
+            </div>
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <div
+                class="input-group input-group-alternative"
+                [class.has-danger]="objet.invalid && objet.touched"
+              >
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="ni ni-bold-right"></i
+                  ></span>
+                </div>
+                <select class="form-select mr-3" formControlName="objet">
+                  <option value="SEMINAIRE" selected>Séminaire</option>
+                  <option *ngFor="let obj of objets" [value]="obj.value">
+                    {{ obj.viewValue }}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="objet.invalid && objet.touched">
+                <small *ngIf="objet.errors?.required" class="text-danger"
+                  ><b>Le champ objet est requis</b></small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <mat-form-field>
+                <mat-label>Date début *</mat-label>
+                <input
+                  matInput
+                  placeholder="DD/MM/YYYY"
+                  [matDatepicker]="dp"
+                  disabled
+                  formControlName="dateDebut"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dp disabled="false"></mat-datepicker>
+              </mat-form-field>
+              <div *ngIf="dateDebut.invalid && dateDebut.touched">
+                <small
+                  *ngIf="dateDebut.value == null || dateDebut.value.length == 0"
+                  class="text-danger"
+                  ><b>Le champ date de début est requis</b>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div
+              class="form-group mb-3"
+              [ngClass]="{ focused: focus === true }"
+            >
+              <mat-form-field>
+                <mat-label>Date fin *</mat-label>
+                <input
+                  matInput
+                  placeholder="DD/MM/YYYY"
+                  [matDatepicker]="dpf"
+                  disabled
+                  formControlName="dateFin"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dpf"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dpf disabled="false"></mat-datepicker>
+              </mat-form-field>
+              <div *ngIf="dateFin.invalid && dateFin.touched">
+                <small
+                  *ngIf="dateFin.value == null || dateFin.value.length == 0"
+                  class="text-danger"
+                  ><b>Le champ date de fin est requis</b>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="voyageForm.invalid"
+        >
+          Sauvegarder
+        </button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-link ml-auto"
+        data-dismiss="modal"
+        (click)="c('Close click')"
+      >
+        Fermer
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!--Delete confirmation-->
+<ng-template #classic let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-danger" id="modal-title-default">
+        Confirmation de suppression
+      </h4>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="d('Cross click')"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">Êtes-vous sur de vouloir supprimer ce voyage ?</div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="deleteVoyage(); c('Close click')"
+      >
+        Confirmer
+      </button>
+      <button
+        type="button"
+        class="btn btn-link ml-auto"
+        data-dismiss="modal"
+        (click)="c('Close click')"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>

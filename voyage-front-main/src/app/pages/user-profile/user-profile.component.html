@@ -1,0 +1,277 @@
+<div
+  class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+  *ngIf="user"
+  style="
+    min-height: 600px;
+    background-size: cover;
+    background-position: center top;
+  "
+  [style.background-image]="
+    user.photoBytes != null
+      ? 'url(data:image/jpg;base64,' + user.photoBytes + ')'
+      : 'url(./assets/img/brand/avatar.jpg)'
+  "
+>
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <!-- Header container -->
+  <div class="container-fluid d-flex align-items-center mt--200">
+    <div class="row">
+      <div class="col-lg-7 col-md-10">
+        <h1 class="display-2 text-white">
+          Bonjour {{ nom.value | titlecase }}
+        </h1>
+        <p class="text-white mt-0 mb-5">
+          Ceci est votre page de profil. Vous pouvez modifier vos données
+          personnelles
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid mt--300">
+  <div class="row">
+    <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+      <div class="card card-profile shadow">
+        <div class="row justify-content-center">
+          <div class="col-lg-3 order-lg-2">
+            <div class="card-profile-image">
+              <div id="container">
+                <div id="infoi">
+                  <a
+                    href="javascript:void(0)"
+                    *ngIf="user"
+                    [class.disabled]="disabledControl"
+                  >
+                    <div *ngIf="!base64; else showSelected">
+                      <img
+                        *ngIf="user.photoBytes == null"
+                        src="./assets/img/brand/avatar.jpg"
+                        class="rounded-circle"
+                        (click)="fileInput.click()"
+                      />
+                      <img
+                        *ngIf="user.photoBytes != null"
+                        src="data:image/jpg;base64,{{ user.photoBytes }}"
+                        class="rounded-circle"
+                        (click)="fileInput.click()"
+                      />
+                    </div>
+                    <ng-template #showSelected>
+                      <img
+                        src="{{ base64 }}"
+                        class="rounded-circle"
+                        (click)="fileInput.click()"
+                      />
+                    </ng-template>
+                  </a>
+                </div>
+              </div>
+              <div id="navi">
+                <input
+                  class="form-control-file"
+                  style="display: none"
+                  type="file"
+                  (change)="onFileChanged($event)"
+                  #fileInput
+                />
+                <a
+                  href="javascript:void(0)"
+                  (click)="fileInput.click()"
+                  [class.disabled]="disabledControl"
+                >
+                  <i class="ni ni-album-2 ni-2x" style="color: #f53b58"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+          <div class="d-flex justify-content-between"></div>
+        </div>
+        <div class="card-body pt-0 pt-md-4">
+          <div class="row">
+            <div class="col">
+              <div
+                class="card-profile-stats d-flex justify-content-center mt-md-5"
+              >
+                <div *ngIf="isSalarie">
+                  <span class="heading">{{ age }}</span>
+                  <span class="description">Ans</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center">
+            <h3>{{ nom.value | uppercase }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8 order-xl-1">
+      <div class="card bg-secondary shadow">
+        <div class="card-header bg-white border-0">
+          <div class="row align-items-center">
+            <div class="col-8">
+              <h3 class="mb-0">Mon profil</h3>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form
+            role="form"
+            [formGroup]="profileForm"
+            (ngSubmit)="editProfile()"
+          >
+            <h6 class="heading-small text-muted mb-4">
+              Mes informations personnelles
+            </h6>
+            <div class="pl-lg-4">
+              <div class="row align-items-center" *ngIf="loadingUpdate == true">
+                <div class="col-8">
+                  <p>mis à jours en cours...</p>
+                </div>
+                <div class="col-4 text-right">
+                  <mat-spinner diameter="40" class="ml-3"></mat-spinner>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="nom.invalid && nom.touched"
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-circle-08"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Nom"
+                        type="text"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="nom"
+                        [attr.disabled]="disabledControl ? '' : null"
+                      />
+                    </div>
+                    <div *ngIf="nom.invalid && nom.touched">
+                      <small *ngIf="nom.errors?.required" class="text-danger"
+                        ><b>Le champ nom est requis</b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6"></div>
+              </div>
+              <div class="row">
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="
+                        telephone.invalid && telephone.touched
+                      "
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-mobile-button"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Téléphone"
+                        type="text"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="telephone"
+                        [attr.disabled]="disabledControl ? '' : null"
+                      />
+                    </div>
+                    <div *ngIf="telephone.invalid && telephone.touched">
+                      <small
+                        *ngIf="telephone.errors?.required"
+                        class="text-danger"
+                        ><b>Le champ téléphone est requis</b></small
+                      >
+                      <small
+                        *ngIf="telephone.errors?.pattern"
+                        class="text-danger"
+                        ><b
+                          >Téléphone doit être composé seulement chiffres
+                        </b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div
+                    class="form-group mb-3"
+                    [ngClass]="{ focused: focus === true }"
+                  >
+                    <div
+                      class="input-group input-group-alternative"
+                      [class.has-danger]="email.invalid && email.touched"
+                    >
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"
+                          ><i class="ni ni-email-83"></i
+                        ></span>
+                      </div>
+                      <input
+                        class="form-control"
+                        placeholder="Email"
+                        type="email"
+                        (focus)="focus = true"
+                        (blur)="focus = false"
+                        formControlName="email"
+                        [attr.disabled]="disabledControl ? '' : null"
+                      />
+                    </div>
+                    <div *ngIf="email.invalid && email.touched">
+                      <small *ngIf="email.errors?.required" class="text-danger"
+                        ><b>Le champ email est requis</b></small
+                      >
+                      <small *ngIf="email.errors?.pattern" class="text-danger"
+                        ><b>Email non valide</b></small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="my-4" />
+
+            <div class="text-center">
+              <button
+                *ngIf="!disabledControl; else enableButton"
+                type="submit"
+                class="btn btn-primary mt-4"
+                [disabled]="profileForm.invalid"
+              >
+                Sauvegarder
+              </button>
+              <ng-template #enableButton>
+                <button
+                  type="button"
+                  class="btn btn-danger mt-4"
+                  (click)="enableControls()"
+                >
+                  modifier
+                </button>
+              </ng-template>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

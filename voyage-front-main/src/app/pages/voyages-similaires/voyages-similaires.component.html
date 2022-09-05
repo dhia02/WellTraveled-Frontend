@@ -1,0 +1,98 @@
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+      <!-- Card stats -->
+      <div class="rowCard">
+        <div class="colCard-xl-3 colCard-lg-6">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Voyages similaires
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0" *ngIf="voyages">{{
+                    voyages.length
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape bg-yellow text-white rounded-circle shadow"
+                  >
+                    <i class="ni ni-chart-bar-32"></i>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 mb-0 text-muted text-sm">
+                <span class="text-warning mr-2"></span>
+                <span class="text-nowrap"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="container-fluid mt--7">
+  <div class="row justify-content-center">
+    <div class="col-lg-12">
+      <div class="row row-grid">
+        <div class="col-lg-4" *ngFor="let voyage of voyages; let i = index">
+          <div class="card card-lift--hover shadow border-0 mb-4">
+            <div class="card-body py-5">
+              <div
+                class="icon icon-shape icon-shape-primary rounded-circle mb-3"
+              >
+                <i class="fa fa-plane"></i>
+              </div>
+              <h4 class="text-primary text-uppercase">
+                {{ voyage.objet }}
+              </h4>
+              <p class="description mt-3 font-weight-bold">
+                Destination :
+                <span class="text-primary"
+                  ><b>{{ voyage.destination }}</b></span
+                >
+              </p>
+
+              <p class="description mt-3 font-weight-bold">
+                Date de début :
+                <span class="text-primary"
+                  ><b>{{ voyage.dateDebut | date }}</b></span
+                >
+              </p>
+              <p class="description mt-3 font-weight-bold">
+                Date de fin :
+                <span class="text-primary"
+                  ><b>{{ voyage.dateFin | date }}</b></span
+                >
+              </p>
+
+              <a
+                href="javascript:void(0)"
+                class="btn btn-success mt-4"
+                (click)="aimer(voyage, true)"
+              >
+                <i class="fa fa-thumbs-up mr-1"></i>{{ voyage.nbLikes }}</a
+              >
+              <a
+                href="javascript:void(0)"
+                class="btn btn-danger mt-4"
+                (click)="aimer(voyage, false)"
+                ><i class="fa fa-thumbs-down mr-1"></i
+                >{{ voyage.nbDisLikes }}</a
+              >
+              <a
+                href="javascript:void(0)"
+                class="btn btn-primary mt-4 mr-1"
+                (click)="participer(voyage)"
+                >Participer <span>{{ voyage.participants }}</span></a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
